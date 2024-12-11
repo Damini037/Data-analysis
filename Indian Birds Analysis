@@ -1,0 +1,84 @@
+1. Initial Data Exploration
+
+df.head()
+df.info()
+
+2. Histogram of Total Observations
+
+plt.figure(figsize=(10, 6))
+sns.histplot(df['total observations'], bins=5, kde=True, color='skyblue')
+plt.title("Distribution of Total Observations", fontsize=16)
+plt.xlabel("Total Observations", fontsize=12)
+plt.ylabel("Frequency", fontsize=12)
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.show()
+
+3. Top 10 Bird Species by Total Observations
+
+top_birds = df.groupby('name')['total observations'].sum().nlargest(10).reset_index()
+plt.figure(figsize=(12, 7))
+sns.barplot(data=top_birds, x='total observations', y='name', palette='viridis')
+plt.title("Top 10 Bird Species by Total Observations", fontsize=16)
+plt.xlabel("Total Observations", fontsize=12)
+plt.ylabel("Bird Species", fontsize=12)
+plt.grid(axis='x', linestyle='--', alpha=0.7)
+plt.show()
+
+4. Loading Dataset and Displaying Summary
+
+import pandas as pd 
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings 
+warnings.filterwarnings("ignore")
+df=pd.read_csv("/kaggle/input/indian-bird-observations-tracking-species/Birds of India.csv")
+print(df.tail())
+print(df.info())
+print(df.isnull().sum())
+
+5. Data Preprocessing
+
+df['last observation'] = pd.to_datetime(df['last observation'], format='%B %d, %Y', errors='coerce')
+df['total observations'] = df['total observations'].str.replace(',', '')
+df['total observations'] = df['total observations'].astype(int)
+print(df.dtypes)
+print(df)
+
+6. Detailed Histogram of Total Observations
+
+plt.figure(figsize=(10, 6))
+sns.histplot(df['total observations'], bins=20, kde=True)
+plt.title('Distribution of Total Observations')
+plt.xlabel('Total Observations')
+plt.ylabel('Frequency')
+plt.show()
+
+7. Top 10 Species by Observations (Detailed Bar Plot)
+
+top_10_species = df.nlargest(10, 'total observations')
+plt.figure(figsize=(12, 8))
+sns.barplot(x='total observations', y='name', data=top_10_species)
+plt.title('Top 10 Bird Species by Total Observations')
+plt.xlabel('Total Observations')
+plt.ylabel('Bird Species')
+plt.show()
+
+8. Monthly Count of Observations
+
+df['month'] = df['last observation'].dt.month_name()
+plt.figure(figsize=(12, 6))
+sns.countplot(x='month', data=df, order=pd.date_range('2024-01-01', '2024-12-31', freq='M').strftime('%B'))
+plt.title('Count of Observations by Month')
+plt.xlabel('Month')
+plt.ylabel('Count')
+plt.xticks(rotation=45)
+plt.show()
+
+9. Scatter Plot of Observations over Time
+
+plt.figure(figsize=(14, 6))
+sns.scatterplot(x='last observation', y='total observations', data=df)
+plt.title('Scatter Plot of Total Observations over Time')
+plt.xlabel('Last Observation Date')
+plt.ylabel('Total Observations')
+plt.show()
